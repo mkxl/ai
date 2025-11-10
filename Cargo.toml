@@ -11,11 +11,14 @@ categories = ["development-tools"]
 
 [dependencies]
 anyhow = "1.0.100"
+async-stream = "0.3.6"
 camino = "1.2.1"
 clap = { version = "4.5.51", features = ["derive", "string"] }
 derive_more = { version = "2.0.1", features = ["constructor"] }
+futures = "0.3.31"
 indoc = "2.0.7"
-mkutils = { git = "https://github.com/mkxl/mkutils-rs", rev = "1589b5ca48494db348fb88b2186207277a2b6934", version = "0.1.0" }
+mkutils = { git = "https://github.com/mkxl/mkutils-rs", rev = "6cafc865a5064689d5c8aea11819a48e6e8cc085", version = "0.1.0" }
+reqwest = { version = "0.12.24", features = ["json", "stream"] }
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
 strum = { version = "0.27.2", features = ["derive"] }

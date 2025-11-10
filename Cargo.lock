@@ -22,11 +22,14 @@ name = "ai"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "async-stream",
  "camino",
  "clap",
  "derive_more",
+ "futures",
  "indoc",
  "mkutils",
+ "reqwest",
  "serde",
  "serde_json",
  "strum 0.27.2",
@@ -1403,7 +1406,7 @@ dependencies = [
 [[package]]
 name = "mkutils"
 version = "0.1.0"
-source = "git+https://github.com/mkxl/mkutils-rs?rev=1589b5ca48494db348fb88b2186207277a2b6934#1589b5ca48494db348fb88b2186207277a2b6934"
+source = "git+https://github.com/mkxl/mkutils-rs?rev=6cafc865a5064689d5c8aea11819a48e6e8cc085#6cafc865a5064689d5c8aea11819a48e6e8cc085"
 dependencies = [
  "anyhow",
  "bytes",
@@ -1435,7 +1438,7 @@ dependencies = [
 [[package]]
 name = "mkutils-macros"
 version = "0.1.0"
-source = "git+https://github.com/mkxl/mkutils-rs?rev=1589b5ca48494db348fb88b2186207277a2b6934#1589b5ca48494db348fb88b2186207277a2b6934"
+source = "git+https://github.com/mkxl/mkutils-rs?rev=6cafc865a5064689d5c8aea11819a48e6e8cc085#6cafc865a5064689d5c8aea11819a48e6e8cc085"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2055,6 +2058,7 @@ dependencies = [
  "bytes",
  "encoding_rs",
  "futures-core",
+ "futures-util",
  "h2",
  "http",
  "http-body",
@@ -2076,12 +2080,14 @@ dependencies = [
  "sync_wrapper",
  "tokio",
  "tokio-native-tls",
+ "tokio-util",
  "tower 0.5.2",
  "tower-http",
  "tower-service",
  "url",
  "wasm-bindgen",
  "wasm-bindgen-futures",
+ "wasm-streams",
  "web-sys",
 ]
 
@@ -3145,6 +3151,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "76f218a38c84bcb33c25ec7059b07847d465ce0e0a76b995e134a45adcb6af76"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "wasm-streams"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "15053d8d85c7eccdbefef60f06769760a563c7f0a9d6902a13d35c7800b0ad65"
+dependencies = [
+ "futures-util",
+ "js-sys",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
 ]
 
 [[package]]

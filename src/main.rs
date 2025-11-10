@@ -1,3 +1,4 @@
+mod anthropic;
 mod chat;
 mod cli_args;
 mod llm_input;

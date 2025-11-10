@@ -6,7 +6,7 @@ pub enum LlmProvider {
     Anthropic,
 }
 
-#[derive(Assoc, Clone, Display, EnumString)]
+#[derive(Assoc, Clone, Copy, Display, EnumString)]
 #[func(pub const fn provider(&self) -> LlmProvider)]
 pub enum LlmType {
     #[assoc(provider = LlmProvider::Anthropic)]

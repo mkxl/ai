@@ -15,6 +15,7 @@ async-stream = "0.3.6"
 camino = "1.2.1"
 clap = { version = "4.5.51", features = ["derive", "string"] }
 derive_more = { version = "2.0.1", features = ["constructor"] }
+enum-assoc = "1.2.4"
 futures = "0.3.31"
 indoc = "2.0.7"
 mkutils = { git = "https://github.com/mkxl/mkutils-rs", rev = "6cafc865a5064689d5c8aea11819a48e6e8cc085", version = "0.1.0" }

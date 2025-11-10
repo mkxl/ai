@@ -1,7 +1,7 @@
 use crate::{chat::Chat, llm_type::LlmType};
 use anyhow::Error as AnyhowError;
 use camino::Utf8PathBuf;
-use clap::{Args, Parser};
+use clap::{Args, Parser, Subcommand};
 use mkutils::{Tracing, Utils};
 
 #[derive(Args)]
@@ -35,10 +35,19 @@ impl ChatArgs {
     }
 }
 
+#[derive(Subcommand)]
+enum CliCommand {
+    Chat(ChatArgs),
+    List,
+}
+
 #[derive(Parser)]
 pub struct CliArgs {
     #[arg(long = "tokio-console")]
     tokio_console_enabled: bool,
+
+    #[command(subcommand)]
+    cli_command: Option<CliCommand>,
 
     #[command(flatten)]
     chat_args: ChatArgs,
@@ -57,6 +66,10 @@ impl CliArgs {
     pub async fn run(self) -> Result<(), AnyhowError> {
         self.init_tracing();
 
-        Chat::new(self.chat_args).await?.run().await
+        match self.cli_command {
+            Some(CliCommand::Chat(chat_args)) => Chat::new(chat_args).await?.run().await,
+            Some(CliCommand::List) => std::todo!(),
+            None => Chat::new(self.chat_args).await?.run().await,
+        }
     }
 }

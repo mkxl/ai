@@ -1,0 +1,32 @@
+[package]
+name = "ai"
+version = "0.1.0"
+edition = "2024"
+description = "What more can I say?"
+readme = "README.md"
+repository = "https://github.com/mkxl/ai"
+license = "Apache-2.0"
+keywords = ["ai"]
+categories = ["development-tools"]
+
+[dependencies]
+anyhow = "1.0.100"
+camino = "1.2.1"
+clap = { version = "4.5.51", features = ["derive", "string"] }
+derive_more = { version = "2.0.1", features = ["constructor"] }
+indoc = "2.0.7"
+mkutils = { git = "https://github.com/mkxl/mkutils-rs", rev = "1589b5ca48494db348fb88b2186207277a2b6934", version = "0.1.0" }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.145"
+strum = { version = "0.27.2", features = ["derive"] }
+tokio = { version = "1.48.0", features = ["macros", "rt-multi-thread"] }
+tracing = "0.1.41"
+walkdir = "2.5.0"
+
+[lints.clippy]
+all = "deny"
+cargo = "deny"
+nursery = "deny"
+pedantic = "deny"
+unit_arg = { level = "allow", priority = 1 }
+multiple_crate_versions = { level = "allow", priority = 1 }

@@ -10,7 +10,6 @@ use mkutils::Utils;
 pub struct Offline;
 
 impl Llm for Offline {
-    #[allow(unstable_name_collisions)]
     fn stream_texts(&mut self, system_prompt: String, mut llm_inputs: Vec<LlmInput>) -> LlmStream<'_> {
         crate::llm::llm_stream! {
             let text_iter = llm_inputs.iter_mut().map(LlmInput::take_content_string);

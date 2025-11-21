@@ -26,8 +26,8 @@ impl ChatArgs {
     const DEFAULT_SYSTEM_PROMPT: &'static str = indoc::indoc! {"
         Answer user queries concisely but correctly.
 
-        At the end of each response include in parentheses a better written version of the prompt to help the user get
-        better at prompting.
+        At the end of each response include in parentheses a better written version of the prompt to help the user \
+        get better at prompting.
     "};
 
     fn default_secret_filepath() -> Utf8PathBuf {

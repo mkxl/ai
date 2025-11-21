@@ -10,7 +10,7 @@ pub struct Offline;
 
 impl Llm for Offline {
     fn stream_texts(&mut self, system_prompt: String, llm_inputs: Vec<LlmInput>) -> LlmStream<'_> {
-        async_stream::try_stream! {
+        crate::llm::llm_stream! {
             yield system_prompt;
             yield "\n".to_owned();
 
@@ -19,6 +19,5 @@ impl Llm for Offline {
                 yield "\n".to_owned();
             }
         }
-        .pin()
     }
 }

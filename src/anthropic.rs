@@ -51,7 +51,7 @@ impl Anthropic {
 
 impl Llm for Anthropic {
     fn stream_texts(&mut self, system_prompt: String, llm_inputs: Vec<LlmInput>) -> LlmStream<'_> {
-        async_stream::try_stream! {
+        crate::llm::llm_stream! {
             let messages = llm_inputs.iter().map(LlmInput::anthropic_message).collect();
             let request_body = RequestBody::new(self.model.mem_take(), Self::MAX_TOKENS, system_prompt, messages, Self::STREAM);
             let mut line_res_stream = self
@@ -76,6 +76,6 @@ impl Llm for Anthropic {
 
                 yield content_block_delta.delta.text;
             }
-        }.pin()
+        }
     }
 }

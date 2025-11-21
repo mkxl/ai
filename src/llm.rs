@@ -6,6 +6,15 @@ use std::pin::Pin;
 
 pub type LlmStream<'a> = Pin<Box<dyn 'a + Stream<Item = Result<String, AnyhowError>>>>;
 
+macro_rules! llm_stream {
+    ($($tt:tt)*) => {
+        ::async_stream::try_stream! {
+            $($tt)*
+        }
+        .pin()
+    };
+}
+
 pub trait Llm {
     fn stream_texts(&mut self, system_prompt: String, llm_inputs: Vec<LlmInput>) -> LlmStream<'_>;
 
@@ -20,3 +29,5 @@ pub trait Llm {
         ().ok()
     }
 }
+
+pub(crate) use llm_stream;

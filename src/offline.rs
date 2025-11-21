@@ -16,6 +16,7 @@ impl Llm for Offline {
 
             for mut llm_input in llm_inputs {
                 yield llm_input.take_content_string();
+                yield "\n".to_owned();
             }
         }
         .pin()

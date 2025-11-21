@@ -4,6 +4,7 @@ use crate::{
 };
 use anyhow::Error as AnyhowError;
 use camino::Utf8Path;
+use itertools::Itertools;
 use mkutils::Utils;
 use reqwest::{Client as ReqwestClient, Error as ReqwestError};
 use tokio::task::JoinSet;
@@ -17,9 +18,9 @@ pub struct Chat {
 }
 
 impl Chat {
-    pub async fn new(mut chat_args: ChatArgs) -> Result<Self, AnyhowError> {
+    pub async fn new(chat_args: ChatArgs) -> Result<Self, AnyhowError> {
         let secret = chat_args.secret_filepath.open()?.to_value_from_json_reader()?;
-        let prompt = Self::prompt(&mut chat_args);
+        let prompt = Self::prompt(&chat_args);
         let llm_inputs = Self::llm_inputs(&chat_args, prompt).await?;
         let chat = Self {
             secret,
@@ -30,8 +31,8 @@ impl Chat {
         chat.ok()
     }
 
-    fn prompt(chat_args: &mut ChatArgs) -> String {
-        chat_args.prompt.mem_take().into_iter().collect()
+    fn prompt(chat_args: &ChatArgs) -> String {
+        chat_args.prompt.iter().join(" ")
     }
 
     async fn llm_inputs(chat_args: &ChatArgs, prompt: String) -> Result<Vec<LlmInput>, AnyhowError> {

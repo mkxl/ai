@@ -12,6 +12,7 @@ impl Llm for Offline {
     fn stream_texts(&mut self, system_prompt: String, llm_inputs: Vec<LlmInput>) -> LlmStream<'_> {
         async_stream::try_stream! {
             yield system_prompt;
+            yield "\n".to_owned();
 
             for mut llm_input in llm_inputs {
                 yield llm_input.take_content_string();

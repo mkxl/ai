@@ -1,23 +1,25 @@
-use crate::llm_input::LlmInput;
-use anyhow::Error as AnyhowError;
+use crate::{
+    llm::{Llm, LlmStream},
+    llm_input::LlmInput,
+};
 use derive_more::Constructor;
-use futures::{Stream, StreamExt};
+use futures::StreamExt;
 use mkutils::Utils;
 use reqwest::Client as ReqwestClient;
 use serde::{Deserialize, Serialize};
 
 #[derive(Constructor, Serialize)]
-pub struct AnthropicMessage {
-    role: String,
-    content: String,
+pub struct AnthropicMessage<'a> {
+    role: &'a str,
+    content: &'a str,
 }
 
 #[derive(Constructor, Serialize)]
-struct RequestBody {
+struct RequestBody<'a> {
     model: String,
     max_tokens: usize,
     system: String,
-    messages: Vec<AnthropicMessage>,
+    messages: Vec<AnthropicMessage<'a>>,
     stream: bool,
 }
 
@@ -45,15 +47,13 @@ impl Anthropic {
     const MAX_TOKENS: usize = 2048;
     const URL: &'static str = "https://api.anthropic.com/v1/messages";
     const STREAM: bool = true;
+}
 
-    pub fn stream_texts(
-        self,
-        system_prompt: String,
-        llm_inputs: Vec<LlmInput>,
-    ) -> impl Stream<Item = Result<String, AnyhowError>> {
+impl Llm for Anthropic {
+    fn stream_texts(&mut self, system_prompt: String, llm_inputs: Vec<LlmInput>) -> LlmStream<'_> {
         async_stream::try_stream! {
             let messages = llm_inputs.iter().map(LlmInput::anthropic_message).collect();
-            let request_body = RequestBody::new(self.model, Self::MAX_TOKENS, system_prompt, messages, Self::STREAM);
+            let request_body = RequestBody::new(self.model.mem_take(), Self::MAX_TOKENS, system_prompt, messages, Self::STREAM);
             let mut line_res_stream = self
                 .http_client
                 .post(Self::URL)
@@ -76,6 +76,6 @@ impl Anthropic {
 
                 yield content_block_delta.delta.text;
             }
-        }
+        }.pin()
     }
 }

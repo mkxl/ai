@@ -1,8 +1,10 @@
 mod anthropic;
 mod chat;
 mod cli_args;
+mod llm;
 mod llm_input;
 mod llm_type;
+mod offline;
 mod secret;
 
 use crate::cli_args::CliArgs;

@@ -1,7 +1,9 @@
-use crate::{anthropic::Anthropic, cli_args::ChatArgs, llm_input::LlmInput, llm_type::LlmProvider, secret::Secret};
+use crate::{
+    anthropic::Anthropic, cli_args::ChatArgs, llm::Llm, llm_input::LlmInput, llm_type::LlmProvider, offline::Offline,
+    secret::Secret,
+};
 use anyhow::Error as AnyhowError;
 use camino::Utf8Path;
-use futures::StreamExt;
 use mkutils::Utils;
 use reqwest::{Client as ReqwestClient, Error as ReqwestError};
 use tokio::task::JoinSet;
@@ -70,21 +72,21 @@ impl Chat {
     }
 
     pub async fn run(self) -> Result<(), AnyhowError> {
-        let mut stdout = tokio::io::stdout();
-        let mut text_res_stream = match self.chat_args.llm_type.provider() {
-            LlmProvider::Anthropic => Anthropic::new(
-                Self::http_client()?,
-                self.chat_args.llm_type.to_string(),
-                self.secret.anthropic_api_key,
-            )
-            .stream_texts(self.chat_args.system_prompt, self.llm_inputs)
-            .pin(),
-        };
-
-        while let Some(text_res) = text_res_stream.next().await {
-            stdout.write_all_and_flush_async(text_res?).await?;
+        match self.chat_args.llm_type.provider() {
+            LlmProvider::Anthropic => {
+                Anthropic::new(
+                    Self::http_client()?,
+                    self.chat_args.llm_type.to_string(),
+                    self.secret.anthropic_api_key,
+                )
+                .print_response(self.chat_args.system_prompt, self.llm_inputs)
+                .await
+            }
+            LlmProvider::Offline => {
+                Offline::new()
+                    .print_response(self.chat_args.system_prompt, self.llm_inputs)
+                    .await
+            }
         }
-
-        ().ok()
     }
 }

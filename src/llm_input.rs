@@ -1,9 +1,10 @@
 use crate::anthropic::AnthropicMessage;
 use derive_more::Constructor;
+use mkutils::Utils;
 use std::path::Path;
-use strum::Display;
+use strum::{Display, IntoStaticStr};
 
-#[derive(Display)]
+#[derive(Display, IntoStaticStr)]
 pub enum Role {
     #[strum(to_string = "user")]
     User,
@@ -32,13 +33,19 @@ impl LlmInput {
         Self::user_text(text)
     }
 
-    pub const fn content_string(&self) -> &str {
+    pub const fn as_content_str(&self) -> &str {
         match &self.content {
             Content::Text(text) => text.as_str(),
         }
     }
 
-    pub fn anthropic_message(&self) -> AnthropicMessage {
-        AnthropicMessage::new(self.role.to_string(), self.content_string().to_owned())
+    pub fn take_content_string(&mut self) -> String {
+        match &mut self.content {
+            Content::Text(text) => text.mem_take(),
+        }
+    }
+
+    pub fn anthropic_message(&self) -> AnthropicMessage<'_> {
+        AnthropicMessage::new((&self.role).into(), self.as_content_str())
     }
 }

@@ -33,4 +33,5 @@ cargo = "deny"
 nursery = "deny"
 pedantic = "deny"
 unit_arg = { level = "allow", priority = 1 }
+future_not_send = { level = "allow", priority = 1 }
 multiple_crate_versions = { level = "allow", priority = 1 }
